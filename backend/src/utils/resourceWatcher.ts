@@ -52,29 +52,17 @@ export class ResourceWatcher<T> {
       );
       if (activeWatchInterval !== this.activeWatchInterval) {
         this.activeWatchInterval = activeWatchInterval;
-        if (this.activelyWatching) {
-          updated = true;
-        }
+        updated = true;
       }
       if (inactiveWatchInterval !== this.inactiveWatchInterval) {
         this.inactiveWatchInterval = inactiveWatchInterval;
-        if (!this.activelyWatching) {
-          updated = true;
-        }
+        updated = true;
       }
     }
     return updated;
   }
 
   startWatching(active: boolean): void {
-    // if still starting up, wait for initial results
-    if (this.watchTimer === null) {
-      if (active) {
-        this.activelyWatching = true;
-      }
-      return;
-    }
-
     if (this.watchTimer !== undefined) {
       if (active === this.activelyWatching) {
         return;
@@ -90,9 +78,6 @@ export class ResourceWatcher<T> {
         // Swallow any exceptions
       })
       .finally(() => {
-        if (this.watchTimer) {
-          return;
-        }
         this.watchTimer = setInterval(
           () => {
             if (this.watchTimer) {
