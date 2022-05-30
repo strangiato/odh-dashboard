@@ -2,15 +2,58 @@
  * Common types, should be kept up to date with backend types
  */
 
-export type DashboardConfig = {
-  enablement: boolean;
-  disableInfo: boolean;
-  disableSupport: boolean;
-  disableClusterManager: boolean;
-  disableTracking: boolean;
-  disableBYONImageStream: boolean;
-  disableISVBadges: boolean;
-  disableAppLauncher: boolean;
+export type DashboardConfig = K8sResourceCommon & {
+  spec: {
+    dashboardConfig: {
+      enablement: boolean;
+      disableInfo: boolean;
+      disableSupport: boolean;
+      disableClusterManager: boolean;
+      disableTracking: boolean;
+      disableBYONImageStream: boolean;
+      disableISVBadges: boolean;
+    };
+    notebookSizes?: [
+      {
+        name: string;
+        resources: NotebookResources;
+      },
+    ];
+    notebookController?: {
+      enabled: boolean;
+      gpuConfig?: {
+        enabled: boolean;
+      };
+      envVarConfig?: {
+        enabled: boolean;
+      };
+    };
+    notebookControllerState?: [
+      {
+        user: string;
+        lastSelectedImage: string;
+        lastSelectedSize: string;
+        environmentVariables: EnvironmentVariable[];
+        secrets: string;
+      },
+    ];
+  };
+};
+
+export type NotebookResources = {
+  requests?: {
+    cpu?: string;
+    memory?: string;
+  };
+  limits: {
+    cpu?: string;
+    memory?: string;
+  };
+};
+
+export type EnvironmentVariable = {
+  key: string;
+  value: string;
 };
 
 export type ClusterSettings = {
@@ -121,7 +164,7 @@ export type K8sResourceCommon = {
   metadata: {
     name: string;
     namespace?: string;
-    uid: string;
+    uid?: string;
     labels?: { [key: string]: string };
     annotations?: { [key: string]: string };
   };

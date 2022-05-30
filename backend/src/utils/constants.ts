@@ -11,20 +11,20 @@ export const yamlRegExp = /\.ya?ml$/;
 export const mdRegExp = /\.md$/;
 
 export const blankDashboardCR: DashboardConfig = {
-    apiVersion: 'opendatahub.io/v1alpha',
-    kind: 'OdhDashboard',
-    metadata: {
-      name: 'odh-dashboard-config',
+  apiVersion: 'opendatahub.io/v1alpha',
+  kind: 'OdhDashboard',
+  metadata: {
+    name: 'odh-dashboard-config',
+  },
+  spec: {
+    dashboardConfig: {
+      enablement: true,
+      disableInfo: false,
+      disableSupport: false,
+      disableClusterManager: false,
+      disableTracking: false,
+      disableBYONImageStream: false,
+      disableISVBadges: false,
     },
-    spec: {
-      dashboardConfig: {
-        enablement: true,
-        disableInfo: false,
-        disableSupport: false,
-        disableClusterManager: false,
-        disableTracking: false,
-        disableBYONImageStream: false,
-        disableISVBadges: false,
-      },
-    },
-  };
+  },
+};
