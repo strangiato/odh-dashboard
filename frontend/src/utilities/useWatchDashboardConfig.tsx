@@ -19,6 +19,7 @@ const blankDashboardCR: DashboardConfig = {
       disableTracking: false,
       disableBYONImageStream: false,
       disableISVBadges: false,
+      disableAppLauncher: false,
     },
   },
 };
