@@ -9,8 +9,12 @@ import { mockExploreApplications } from '../../__mocks__/mockExploreApplications
 import { mockGettingStartedDoc } from '../../__mocks__/mockGettingStartedDoc';
 
 const dashboardConfig = {
-  disableInfo: false,
-  enablement: true,
+  spec: {
+    dashboardConfig: {
+      enablement: true,
+      disableInfo: true,
+    },
+  },
 };
 
 jest.mock('react-router-dom', () => {
@@ -60,8 +64,8 @@ jest.mock('../utilities/useWatchDashboardConfig', () => ({
 
 describe('ExploreApplications', () => {
   beforeEach(() => {
-    dashboardConfig.disableInfo = false;
-    dashboardConfig.enablement = true;
+    dashboardConfig.spec.dashboardConfig.disableInfo = false;
+    dashboardConfig.spec.dashboardConfig.enablement = true;
   });
 
   it('should display available applications', () => {
@@ -162,7 +166,7 @@ describe('ExploreApplications', () => {
   });
 
   it('should disable the cards when disableInfo is set', () => {
-    dashboardConfig.disableInfo = true;
+    dashboardConfig.spec.dashboardConfig.disableInfo = true;
     const wrapper = mount(
       <Provider store={store}>
         <Router>
@@ -188,7 +192,7 @@ describe('ExploreApplications', () => {
   });
 
   it('should hide the enable button when dashboard config enablement is false', () => {
-    dashboardConfig.enablement = false;
+    dashboardConfig.spec.dashboardConfig.enablement = false;
     const wrapper = mount(
       <Provider store={store}>
         <Router>

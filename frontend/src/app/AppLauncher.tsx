@@ -90,7 +90,7 @@ const AppLauncher: React.FC<AppLauncherProps> = ({ dashboardConfig }) => {
 
     const getODHApplications = (): Section[] => {
       const osConsoleAction = getOpenShiftConsoleAction();
-      const ocmAction = dashboardConfig.spec.dashboardConfig.disableClusterManager
+      const ocmAction = dashboardConfig.disableClusterManager
         ? null
         : getOCMAction(clusterID, clusterBranding);
 
@@ -128,12 +128,7 @@ const AppLauncher: React.FC<AppLauncherProps> = ({ dashboardConfig }) => {
     sections.sort((a, b) => sectionSortValue(a) - sectionSortValue(b));
 
     return sections;
-  }, [
-    clusterBranding,
-    clusterID,
-    consoleLinks,
-    dashboardConfig.spec.dashboardConfig.disableClusterManager,
-  ]);
+  }, [clusterBranding, clusterID, consoleLinks, dashboardConfig.disableClusterManager]);
 
   const onToggle = () => {
     setIsOpen((prev) => !prev);
