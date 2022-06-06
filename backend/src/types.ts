@@ -41,22 +41,6 @@ export type DashboardConfig = K8sResourceCommon & {
   };
 };
 
-export type NotebookResources = {
-  requests?: {
-    cpu?: string;
-    memory?: string;
-  };
-  limits: {
-    cpu?: string;
-    memory?: string;
-  };
-};
-
-export type EnvironmentVariable = {
-  key: string;
-  value: string;
-};
-
 export type ClusterSettings = {
   pvcSize: number;
   cullerTimeout: number;
@@ -129,9 +113,9 @@ export type RouteKind = {
 
 // Minimal type for Subscriptions
 export type SubscriptionKind = {
-  status: {
-    installedCSV: string;
-    installPlanRef: {
+  status?: {
+    installedCSV?: string;
+    installPlanRef?: {
       namespace: string;
     };
   };
@@ -288,46 +272,131 @@ export type BuildStatus = {
   timestamp?: string;
 };
 
+export type EnvironmentVariable = {
+  name: string;
+  value: string;
+};
+
+export type NotebookResources = {
+  requests: {
+    cpu?: string;
+    memory?: string;
+  };
+  limits?: {
+    cpu?: string;
+    memory?: string;
+  };
+};
+
+export type NotebookPort = {
+  name: string;
+  containerPort: number;
+  protocol: string;
+};
+
+export type NotebookContainer = {
+  name: string;
+  image: string;
+  imagePullPolicy?: string;
+  workingDir?: string;
+  env: EnvironmentVariable[];
+  ports?: NotebookPort[];
+  resources?: NotebookResources;
+  livenessProbe?: Record<string, unknown>;
+};
+
+export type Notebook = {
+  apiVersion?: string;
+  kind?: string;
+  metadata: {
+    name: string;
+    namespace?: string;
+    labels?: { [key: string]: string };
+    annotations?: { [key: string]: string };
+  };
+  spec: {
+    template: {
+      spec: {
+        containers: NotebookContainer[];
+      };
+    };
+  };
+  status?: Record<string, unknown>;
+} & K8sResourceCommon;
+
+export type NotebookList = {
+  apiVersion?: string;
+  kind?: string;
+  metadata: Record<string, unknown>;
+  items: Notebook[];
+} & K8sResourceCommon;
+
+export type Route = {
+  apiVersion?: string;
+  kind?: string;
+  metadata: {
+    name: string;
+    namespace: string;
+    annotations?: { [key: string]: string };
+  };
+  spec: {
+    host: string;
+    port: {
+      targetPort: string;
+    };
+    tls: {
+      insecureEdgeTerminationPolicy: string;
+      termination: string;
+    };
+    to: {
+      kind: string;
+      name: string;
+      weight: number;
+    };
+    wildcardPolicy: string;
+  };
+};
+
 export type ODHSegmentKey = {
   segmentKey: string;
 };
 
-export type NotebookError = {
+export type NotebookImageError = {
   severity: string;
   message: string;
 };
 
-export type NotebookStatus = 'Importing' | 'Validating' | 'Succeeded' | 'Failed';
+export type NotebookImageStatus = 'Importing' | 'Validating' | 'Succeeded' | 'Failed';
 
-export type Notebook = {
+export type NotebookImage = {
   id: string;
-  phase?: NotebookStatus;
+  phase?: NotebookImageStatus;
   user?: string;
   uploaded?: Date;
-  error?: NotebookError;
-} & NotebookCreateRequest &
-  NotebookUpdateRequest;
+  error?: NotebookImageError;
+} & NotebookImageCreateRequest &
+  NotebookImageUpdateRequest;
 
-export type NotebookCreateRequest = {
+export type NotebookImageCreateRequest = {
   name: string;
   url: string;
   description?: string;
   // FIXME: This shouldn't be a user defined value consumed from the request payload but should be a controlled value from an authentication middleware.
   user: string;
-  software?: NotebookPackage[];
-  packages?: NotebookPackage[];
+  software?: NotebookImagePackage[];
+  packages?: NotebookImagePackage[];
 };
 
-export type NotebookUpdateRequest = {
+export type NotebookImageUpdateRequest = {
   id: string;
   name?: string;
   description?: string;
   visible?: boolean;
-  software?: NotebookPackage[];
-  packages?: NotebookPackage[];
+  software?: NotebookImagePackage[];
+  packages?: NotebookImagePackage[];
 };
 
-export type NotebookPackage = {
+export type NotebookImagePackage = {
   name: string;
   version: string;
   visible: boolean;
